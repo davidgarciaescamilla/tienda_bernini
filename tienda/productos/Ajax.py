@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -7,8 +8,9 @@ from tienda.models import Product
 import json
 
 
- # método con el que nos logueamos y obtenemos el id del usuario si las credenciales son correctas
 def login(request):
+    """ método con el que nos logueamos y obtenemos el id del usuario
+    si las credenciales son correctas"""
     if request.is_ajax():
         form = request.POST
         username = form.get('user')

@@ -1,19 +1,28 @@
+# -*- coding: utf-8 -*-
+
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import viewsets
 from django.shortcuts import render
 from tienda.models import Product
+from . rest import serializers
 
-from django.http import JsonResponse
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """"
+    API endpoint para mostrar los productos con un token valido
+    """
+    queryset = Product.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = serializers.ProductSerializer
+
+    def get_queryset(self):
+        """Return all objects for authenticateds users only"""
+        return self.queryset.order_by('name')
 
 
 def vista_productos(request):
     if request.session['token']:
         return render(request, 'tienda/productos.html', {})
     return render(request, 'tienda/login.html', {})
-
-
-def lista_productos(request):
-    if not request.session['token']:
-        return render(request, 'tienda/login.html', {})
-    MAX_OBJECTS = 20
-    products = Product.objects.all()[:MAX_OBJECTS]
-    data = {"results": list(products.values("pk", "title", "price"))}
-    return JsonResponse(data)

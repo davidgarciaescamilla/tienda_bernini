@@ -25,7 +25,7 @@ SECRET_KEY = 'y^vfuxjq)adwv4@a3b9bs=7w^64okn4xm&(9sn!=5qu)yz!90#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tienda.apps.TiendaConfig'
+    'tienda.apps.TiendaConfig',
+    'rest_framework',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
