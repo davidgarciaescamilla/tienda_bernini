@@ -62,22 +62,18 @@
       {
         text: "{% trans 'Send email' %}",
         action: function () {
-          // var d_ids = {}
-          // var table = tabla.rows('.selected').data();
-          //
-          // $.each( table, function(value) {
-          //
-          //   d_ids[table[value]['name']] = table[value]['price'];
-          //
-          // });
+          var d_ids = {}
+          var table = tabla.rows('.selected').data();
 
-          var data = table.buttons.exportData( {
-            modifier: {
-              selected: true
-            }
-          } );
+          $.each( table, function(value) {
 
-          window.location.href = "mailto:store@bernini.com?subject=Order&body=ID items: "+ JSON.stringify(data);
+            d_ids[table[value]['name']] = table[value]['price'];
+
+          });
+
+          d_ids = JSON.stringify(d_ids)
+
+          get_email(d_ids)
         }
 
       },
@@ -106,5 +102,31 @@
     });
 
   });
+
+  function get_email(order){
+
+    d_data = {'message': 'A order was received '+order,
+              'name': "{{user.username}}",
+              'email': "{{user.email}}"}
+
+    send_mail(d_data)
+}
+
+  function send_mail(d_data){
+    $.ajax({
+      type        : "POST",
+      url         : "{% url 'send_message'  %}",
+      data: d_data,
+      success: function(response){
+        $.alert({
+          title: '',
+          content: response
+        })
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+        console.log(response)
+      }
+    });
+  }
 
 </script>

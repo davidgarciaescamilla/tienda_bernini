@@ -2,6 +2,7 @@
 
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 from rest_framework import viewsets
 from django.shortcuts import render
 from tienda.models import Product
@@ -28,5 +29,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 def vista_productos(request):
     if request.session['token']:
-        return render(request, 'tienda/productos.html', {})
+        queryset = User.objects.values('email', 'username')
+        l_user = queryset.filter(id=request.session['token'])[0]
+        return render(request, 'tienda/productos.html', {'user': l_user})
     return render(request, 'tienda/login.html', {})

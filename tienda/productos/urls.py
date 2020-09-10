@@ -7,4 +7,6 @@ urlpatterns = [
 
     path('login/', Ajax.login, name='login'),
     path('get_products/', Ajax.get_products, name='get_products'),
+    path('send_message/', Ajax.send_message, name='send_message'),
+
 ]

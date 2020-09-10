@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from tienda.models import Product
+from tienda.utils import send_mail
 
 import json
 
@@ -33,24 +34,6 @@ def login(request):
                         content_type="application/json")
 
 
-# método para crear productos
-def product_create(request):
-    msg = False
-    if request.is_ajax():
-        form = request.POST
-        try:
-            id = request.session['token']
-            Product.objects.create(user_id=id, title=form.get('name'),
-                                   price=form.get('price'),
-                                   amount=form.get('amount'))
-            msg = 'Product has been created'
-        except Exception as e:
-            msg = str(e)
-            print(str(e))
-        return HttpResponse(json.dumps(msg),
-                            content_type="application/json")
-
-
 # método ajax para rellenar la tabla de los productos automáticamente
 def get_products(request):
     d_result = {
@@ -67,3 +50,18 @@ def get_products(request):
             }
             d_result['data'].append(valores)
     return HttpResponse(json.dumps(d_result), content_type="application/json")
+
+
+def send_message(request):
+    v_message = {'result': 'not send'}
+    if request.is_ajax():
+        form = request.POST
+        v_message = form.get('message', False)
+        v_name = form.get('name', 'anonymous')
+        v_email = form.get('email', False)
+        if v_email:
+            v_message = 'Subject:{}\nFrom: {}\n{}'.format(
+                "Cliente Bernini: " + v_name, v_email, v_message)
+            send_mail.get_correo(v_email, v_message)
+        return HttpResponse(json.dumps(v_message),
+                            content_type="application/json")
