@@ -7,6 +7,7 @@ from tienda.models import Product
 import json
 
 
+ # método con el que nos logueamos y obtenemos el id del usuario si las credenciales son correctas
 def login(request):
     if request.is_ajax():
         form = request.POST
@@ -30,6 +31,7 @@ def login(request):
                         content_type="application/json")
 
 
+# método para crear productos
 def product_create(request):
     msg = False
     if request.is_ajax():
@@ -47,19 +49,19 @@ def product_create(request):
                             content_type="application/json")
 
 
+# método ajax para rellenar la tabla de los productos automáticamente
 def get_products(request):
     d_result = {
         'data': []
     }
     if request.is_ajax():
         products = Product.objects.all()
-        l_products = list(products.values("pk", "title", "price", "amount"))
+        l_products = list(products.values("pk", "title", "price"))
         for value in l_products:
             valores = {
                 'pk': value['pk'],
                 'name': value['title'],
                 'price': str(value['price']),
-                'amount': str(value['amount']),
             }
             d_result['data'].append(valores)
     return HttpResponse(json.dumps(d_result), content_type="application/json")
