@@ -58,11 +58,11 @@ def get_products(request):
     }
     if request.is_ajax():
         products = Product.objects.all()
-        l_products = list(products.values("pk", "title", "price"))
+        l_products = list(products.values("pk", "name", "price"))
         for value in l_products:
             valores = {
                 'pk': value['pk'],
-                'name': value['title'],
+                'name': value['name'],
                 'price': str(value['price']),
             }
             d_result['data'].append(valores)

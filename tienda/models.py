@@ -7,14 +7,15 @@ from django.db import models
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    amount = models.IntegerField()
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+
+    name = models.CharField(max_length=200, unique=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    amount = models.IntegerField()
 
     def __str__(self):
         return self.name

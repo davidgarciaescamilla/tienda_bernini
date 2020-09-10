@@ -14,17 +14,17 @@
 <body>
   <div class="container">
     <h2>Zapatos Bernini</h2>
-      <div class="col-md-12">
-        <table id=product_table class="table display table-hover text-center" >
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
-              <th hidden>PK</th>
-            </tr>
-          </thead>
-        </table>
-      </div>
+    <div class="col-md-12">
+      <table id=product_table class="table table-hover text-center" >
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th hidden>PK</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
   </div>
 </body>
 
@@ -36,6 +36,7 @@
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.2/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
 
 <script type="text/javascript">
@@ -54,26 +55,37 @@
       dom: 'Bfrtip',
       text: 'Export',
       buttons: [
-      'csv',
+      'selectAll',
+      'selectNone',
+      'excelHtml5',
+      'csvHtml5',
       {
         text: "{% trans 'Send email' %}",
         action: function () {
-          var d_ids = {}
-          var table = tabla.rows('.selected').data();
+          // var d_ids = {}
+          // var table = tabla.rows('.selected').data();
+          //
+          // $.each( table, function(value) {
+          //
+          //   d_ids[table[value]['name']] = table[value]['price'];
+          //
+          // });
 
-          $.each( table, function(value) {
+          var data = table.buttons.exportData( {
+            modifier: {
+              selected: true
+            }
+          } );
 
-            d_ids[table[value]['name']] = table[value]['price'];
-
-          });
-
-          console.log(d_ids);
-
-          window.location.href = "mailto:store@bernini.com?subject=Order&body=ID items: "+ JSON.stringify(d_ids);
+          window.location.href = "mailto:store@bernini.com?subject=Order&body=ID items: "+ JSON.stringify(data);
         }
 
       },
       ],
+
+      exportOptions: {
+        rows: { selected: true }
+      },
 
       ajax: {
 

@@ -18,8 +18,12 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProductSerializer
 
     def get_queryset(self):
-        """Return all objects for authenticateds users only"""
+        """ Devuelve todo los objetos a un usuario autenticado """
         return self.queryset.order_by('name')
+
+    def perform_create(self, serializer):
+        """ Crea un nuevo producto """
+        serializer.save(user=self.request.user)
 
 
 def vista_productos(request):
